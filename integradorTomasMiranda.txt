@@ -1,0 +1,195 @@
+CREATE DATABASE `integrador`;
+
+USE `integrador`;
+
+CREATE TABLE `Director` (
+	`idDirector` INT NOT NULL,
+	`nomDirector` VARCHAR(50) NOT NULL,
+	`dirDir` VARCHAR(50) NOT NULL,
+	`telDir` INT NOT  NULL,
+	PRIMARY KEY (`idDirector`)
+);
+
+CREATE TABLE `pelicula` (
+	`idPelicula` INT NOT NULL,
+	`idDirector` INT NOT NULL,
+	`titulo` VARCHAR(50) NOT NULL,
+	`fechaEstreno` DATE NOT NULL,
+	`resumen` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`idPelicula`),
+	CONSTRAINT `FK_pelicula_director` FOREIGN KEY (`idDirector`) REFERENCES `director` (`idDirector`)
+);
+CREATE TABLE `Actor` (
+	`idActor` INT NOT NULL,
+	`nomActor` VARCHAR(50) NOT NULL,
+	`dirAct` VARCHAR(50) NOT NULL,
+	`telAct` INT NOT NULL,
+	`fechaNac` DATE NOT NULL,
+	`lugarNac` VARCHAR(50) NOT NULL,
+	`estadoCivil` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`idActor`)
+);
+CREATE TABLE `Productor` (
+	`idProductor` INT NOT NULL,
+	`nomProdcutor` VARCHAR(50) NOT NULL,
+	`dirProd` VARCHAR(50) NOT NULL,
+	`telProd` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`idProductor`)
+);
+CREATE TABLE `Certamen` (
+	`idCertamen` INT NOT NULL,
+	`nomCertamen` VARCHAR(50) NOT NULL,
+	`ciudad` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`idCertamen`)
+);
+CREATE TABLE `Critica` (
+	`idCritica` INT NOT NULL,
+	`idPelicula` INT NOT NULL,
+	`fecha` DATE NOT NULL,
+	`lugar` VARCHAR(50) NOT NULL,
+	`autor` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`idCritica`),
+	CONSTRAINT `FK_critica_pelicula` FOREIGN KEY (`idPelicula`) REFERENCES `pelicula` (`idPelicula`)
+);
+CREATE TABLE `Produce` (
+	`idProduce` INT NOT NULL,
+	`idProductor` INT NOT NULL,
+	`idPelicula` INT NOT NULL,
+	`aportacion` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`idProduce`),
+	CONSTRAINT `FK_produce_productor` FOREIGN KEY (`idProductor`) REFERENCES `productor` (`idProductor`),
+	CONSTRAINT `FK_produce_pelicula` FOREIGN KEY (`idPelicula`) REFERENCES `pelicula` (`idPelicula`)
+);
+CREATE TABLE `Premia` (
+	`idPremio` INT NOT NULL,
+	`idPelicula` INT NOT NULL,
+	`idCertamen` INT NOT NULL,
+	`tipoPremio` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`idPremio`),
+	CONSTRAINT `FK_premia_pelicula` FOREIGN KEY (`idPelicula`) REFERENCES `pelicula` (`idPelicula`),
+	CONSTRAINT `FK_premia_certamen` FOREIGN KEY (`idCertamen`) REFERENCES `certamen` (`idCertamen`)
+);
+CREATE TABLE `Interviene` (
+	`idInterviene` INT NOT NULL,
+	`idPelicula` INT NULL,
+	`idActor` INT NULL,
+	`tipoPapel` VARCHAR(50) NOT NULL,
+	`papel` VARCHAR(50) NOT NULL,
+	`sueldo` INT NOT NULL,
+	PRIMARY KEY (`idInterviene`),
+	CONSTRAINT `FK_interviene_pelicula` FOREIGN KEY (`idPelicula`) REFERENCES `pelicula` (`idPelicula`),
+	CONSTRAINT `FK_interviene_actor` FOREIGN KEY (`idActor`) REFERENCES `actor` (`idActor`)
+);
+
+INSERT INTO `integrador`.`director` 
+(`idDirector`, `nomDirector`, `dirDir`, `telDir`)
+VALUES 
+('1', 'JOE RUSSO', 'FALSA 123', '44509876'),
+('2', 'JAMES CAMERON', 'VERGARA 6543', '44506626'),
+('3', 'RON HARPER', 'CORACEROS 555', '46659006'),
+('4', 'SAM RAIMI', 'MALARREDO 123', '44239876');
+
+INSERT INTO `integrador`.`pelicula` 
+(`idPelicula`, `idDirector`, `titulo`, `fechaEstreno`, `resumen`) 
+VALUES 
+('1', '1', 'END GAME', '2019-05-06', 'AVENGERS VS THANOS'),
+('2', '2', 'TERMINATOR', '1994-04-06', 'TERMINATOR REGRESA'),
+('3', '3', 'SOLO', '2018-08-15', 'HISTORIA DE HAN SOLO'),
+('4', '4', 'SPIDERMAN', '2001-05-15', 'SPIDERMAN VS DUENDE VERDE'),
+('5', '2', 'Casa Blanca', '1961-05-15', 'DE ALGO SE TRATA');
+
+INSERT INTO `integrador`.`actor`
+ (`idActor`, `nomActor`, `dirAct`, `telAct`, `fechaNac`, `lugarNac`, `estadoCivil`) 
+ VALUES 
+ ('1', 'Ryan Reynolds', 'CORRIENTES 123', '1122885533', '1992-12-09', 'EEUU', 'SOLTERO'),
+ ('2', 'Johnny Depp', 'PUERREDON 1233', '1144881133', '1987-02-19', 'SAN JUAN', 'SOLTERO'),
+ ('3', ' Will Smith', 'CORDOBA 8993', '1177885511', '1992-12-19', 'MENDOZA', 'CASADO'),
+ ('4', 'Cris Prath', '9 DE JULIO 1000', '1222895563', '1995-04-21', 'CORDOBA', 'CASADO'),
+ ('5', 'Tommy lee jones', '9 DE JULIO 1000', '1222895563', '1975-04-21', 'BUENOS AIRES', 'CASADO');
+ 
+ INSERT INTO `integrador`.`productor` 
+ (`idProductor`, `nomProdcutor`, `dirProd`, `telProd`) 
+ VALUES 
+ ('1', 'KEVIN FEIGH', 'FLORESTA 3376', '44890011'),
+ ('2', 'STEVEN SPIELBERG', 'MALARREDO 076', '44590011'),
+ ('3', 'JIM PARSON', 'FELIX FRIAS 2306', '46791111'),
+ ('4', 'BRIAN MAY', 'LISZT 1002', '44001011');
+ 
+ INSERT INTO `integrador`.`certamen` 
+ (`idCertamen`, `nomCertamen`, `ciudad`) 
+ VALUES 
+ ('1', 'OSCAR', 'LOS ANGELES'),
+ ('2', 'GLOBOS DE ORO', 'PASADENA'),
+ ('3', 'MARTIN FIERRO', 'CABA'),
+ ('4', 'DIANGO', 'CORDOBA'),
+ ('5', 'PREMIOS FEST', 'San Juan');
+ 
+ INSERT INTO `integrador`.`critica` 
+ (`idCritica`, `idPelicula`, `fecha`, `lugar`, `autor`) 
+ VALUES 
+ ('1', '1', '2020-12-09', 'CABA', 'SHELDON COOPER'),
+ ('2', '4', '2019-02-19', 'CORDOBA', 'RICARDO FORT'),
+ ('3', '2', '2002-01-01', 'NUEVA YORK', 'LIONEL MESSI'),
+ ('4', '5', '2001-12-09', 'hollywood', 'Johnny Depp'),
+ ('5', '5', '2001-12-09', 'hollywood', 'Will Smith'),
+ ('6', '5', '2001-12-09', 'hollywood', 'Ryan Reynolds');
+ 
+ INSERT INTO `integrador`.`produce` 
+ (`idProduce`, `idProductor`, `idPelicula`, `aportacion`) 
+ VALUES 
+ ('1', '1', '1', 'HIZO QUE TODO SALIERA BIEN'),
+ ('2', '4', '3', 'CASI LA ARRUINA'),
+ ('3', '2', '2', 'MEJORO ACTUACION DE LOS ACTORES'),
+ ('4', '3', '4', 'SOLO PUSO EL NOMBRE');
+ 
+ INSERT INTO `integrador`.`premia` 
+ (`idPremio`, `idPelicula`, `idCertamen`, `tipoPremio`) 
+ VALUES 
+ ('1', '1', '5', 'MEJOR PELICULA'),
+ ('2', '3', '5', 'MEJORES EFECTOS ESPECIALES'),
+ ('3', '2', '5', 'MEJOR BANDA SONORA'),
+ ('4', '4', '5', 'MEJOR GUION');
+ 
+ INSERT INTO `integrador`.`interviene` 
+ (`idInterviene`, `idPelicula`, `idActor`, `tipoPapel`, `papel`, `sueldo`) 
+ VALUES 
+ ('1', '1', '1', 'SECUNDARIO', 'DEADPOOL', '100000000'),
+ ('2', '3', '4', 'PRINCIPAL', 'HEROE', '130050000'),
+ ('3', '4', '2', 'CAMEO', 'ARBOL', '298000'),
+ ('4', '2', '3', 'SECUNDARIO', 'CONDUCTOR', '10000'),
+ ('5', '5', '5', 'PRINCIPAL', 'CONDUCTOR', '950111');
+ 
+ 
+ SELECT actor.nomActor, actor.dirAct, actor.fechaNac,actor.telAct,actor.lugarNac,actor.estadoCivil, director.nomDirector, director.dirDir,director.telDir,pelicula.titulo,pelicula.fechaEstreno,pelicula.resumen
+ FROM actor,director,pelicula,produce,interviene,productor
+ WHERE director.idDirector = pelicula.idDirector
+ AND produce.idProductor = productor.idProductor
+ AND produce.idPelicula = pelicula.idPelicula
+ AND interviene.idPelicula = pelicula.idPelicula
+ AND interviene.idActor = actor.idActor
+ AND pelicula.fechaEstreno BETWEEN '1953-01-01' AND '1998-12-31'
+ AND pelicula.titulo LIKE '%Casa%'
+ AND interviene.sueldo BETWEEN '95000' AND '180000'
+ ORDER BY interviene.sueldo DESC;
+ 
+ SELECT pelicula.titulo, pelicula.fechaEstreno, pelicula.resumen
+ FROM pelicula, critica,interviene,actor
+ WHERE pelicula.idPelicula = critica.idCritica
+ AND interviene.idPelicula = pelicula.idPelicula
+ AND interviene.idActor = actor.idActor
+ AND critica.lugar = 'hollywood'
+ AND actor.fechaNac BETWEEN '1980-01-01' AND '1993-12-31'
+ ORDER BY pelicula.fechaEstreno desc
+ LIMIT 3;
+ 
+ SELECT AVG((DATEDIFF(CURDATE(),actor.fechaNac)/365))
+ FROM actor,interviene,pelicula,premia,certamen,critica
+ WHERE interviene.idActor = actor.idActor
+ AND interviene.idPelicula = pelicula.idPelicula
+ AND premia.idPelicula = pelicula.idPelicula
+ AND premia.idCertamen = certamen.idCertamen
+ AND pelicula.idPelicula = critica.idPelicula
+ AND certamen.ciudad = 'San Juan'
+ AND critica.autor = 'Johnny Depp'
+ AND critica.autor = 'Will Smith'
+ AND critica.autor = 'Ryan Reynolds';
