@@ -1,0 +1,242 @@
+CREATE DATABASE `2doParcial`;
+
+USE `2doParcial`;
+
+CREATE TABLE `AGENCIA` (
+	`COD_AGENCIA` INT NOT NULL,
+	`NOMBRE` VARCHAR(50) NOT NULL DEFAULT '',
+	`DIRECCION` VARCHAR(50) NOT NULL DEFAULT '',
+	`CIUDAD` VARCHAR(50) NOT NULL DEFAULT 0,
+	`PROVINCIA` VARCHAR(50) NOT NULL DEFAULT '0',
+	`PAIS` VARCHAR(50) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`COD_AGENCIA`)
+);
+
+CREATE TABLE `CATEGORIA` (
+	`COD_CATEGORIA` INT NOT NULL,
+	`CATEGORIA` VARCHAR(50) NULL DEFAULT NULL,
+	PRIMARY KEY (`COD_CATEGORIA`)
+);
+
+CREATE TABLE `EMPLEADO` (
+	`COD_EMPLEADO` INT NOT NULL,
+	`NOMBRE` VARCHAR(50) NULL DEFAULT NULL,
+	`APELLIDO` VARCHAR(50) NULL DEFAULT NULL,
+	`DIRECCION` VARCHAR(50) NULL DEFAULT NULL,
+	`FECHA_NAC` DATE NULL DEFAULT NULL,
+	`EDAD` INT NULL DEFAULT NULL,
+	`CIUDAD` VARCHAR(50) NULL DEFAULT NULL,
+	`PROVINCIA` VARCHAR(50) NULL DEFAULT NULL,
+	PRIMARY KEY (`COD_EMPLEADO`)
+);
+
+CREATE TABLE `COMPANIA` (
+	`COD_COMPANIA` INT NULL,
+	`NOMBRE` VARCHAR(50) NULL DEFAULT NULL,
+	`DIRECCION` VARCHAR(50) NULL DEFAULT NULL,
+	`CIUDAD` VARCHAR(50) NULL DEFAULT NULL,
+	`PROVINCIA` VARCHAR(50) NULL DEFAULT NULL,
+	`PAIS` VARCHAR(50) NULL DEFAULT NULL,
+	PRIMARY KEY (`COD_COMPANIA`)
+);
+
+CREATE TABLE `CLIENTE` (
+	`COD_CLIENTE` INT NULL,
+	`NOMBRE` VARCHAR(50) NULL DEFAULT NULL,
+	`APELLIDO` VARCHAR(50) NULL DEFAULT NULL,
+	`DIRECCION` VARCHAR(50) NULL DEFAULT NULL,
+	`FECHA_NAC` DATE NULL DEFAULT NULL,
+	`EDAD` INT NULL DEFAULT NULL,
+	`SEXO` VARCHAR(50) NULL DEFAULT NULL,
+	`CIUDAD` VARCHAR(50) NULL DEFAULT NULL,
+	`PROVINCIA` VARCHAR(50) NULL DEFAULT NULL,
+	`PAIS` VARCHAR(50) NULL DEFAULT NULL,
+	PRIMARY KEY (`COD_CLIENTE`)
+);
+
+CREATE TABLE `TRANSPORTE` (
+	`COD_TRANSPORTE` INT NULL,
+	`COD_CATEGORIA` INT NULL,
+	`COD_AGENCIA` INT NULL,
+	`TRANSPORTE` VARCHAR(50) NULL DEFAULT NULL,
+	`MARCA` VARCHAR(50) NULL DEFAULT NULL,
+	`PU` INT NULL DEFAULT NULL,
+	PRIMARY KEY (`COD_TRANSPORTE`),
+	CONSTRAINT `FK__categoria` FOREIGN KEY (`COD_CATEGORIA`) REFERENCES `categoria` (`COD_CATEGORIA`),
+	CONSTRAINT `FK__agencia` FOREIGN KEY (`COD_AGENCIA`) REFERENCES `agencia` (`COD_AGENCIA`)
+);
+
+CREATE TABLE `DOCUMENTO` (
+	`COD_DOCUMENTO` INT NULL,
+	`COD_CLIENTE` INT NULL,
+	`TIPO` VARCHAR(50) NULL DEFAULT NULL,
+	`NUMERO` INT NULL DEFAULT NULL,
+	PRIMARY KEY (`COD_DOCUMENTO`),
+	CONSTRAINT `FK__cliente` FOREIGN KEY (`COD_CLIENTE`) REFERENCES `cliente` (`COD_CLIENTE`)
+);
+
+
+CREATE TABLE `ALQUILER` (
+	`COD_ALQUILER` INT NULL,
+	`COD_CLIENTE` INT NULL,
+	`COD_COMPANIA` INT NULL,
+	`COD_EMPLEADO` INT NULL,
+	`FECHA_ALQUILER` DATE NULL DEFAULT NULL,
+	`COMENTARIOS` VARCHAR(50) NULL DEFAULT NULL,
+	PRIMARY KEY (`COD_ALQUILER`),
+	CONSTRAINT `FK_alquiler_cliente` FOREIGN KEY (`COD_CLIENTE`) REFERENCES `cliente` (`COD_CLIENTE`),
+	CONSTRAINT `FK_alquiler_compania` FOREIGN KEY (`COD_COMPANIA`) REFERENCES `compania` (`COD_COMPANIA`),
+	CONSTRAINT `FK_alquiler_empleado` FOREIGN KEY (`COD_EMPLEADO`) REFERENCES `empleado` (`COD_EMPLEADO`)
+);
+
+CREATE TABLE `ALQUILER_DETALLE` (
+	`COD_DETALLE` INT NULL,
+	`COD_ALQUILER` INT NULL,
+	`COD_TRANSPORTE` INT NULL,
+	`CANTIDAD` INT NULL,
+	PRIMARY KEY (`COD_DETALLE`),
+	CONSTRAINT `FK_alquiler_detalle_alquiler` FOREIGN KEY (`COD_ALQUILER`) REFERENCES `alquiler` (`COD_ALQUILER`),
+	CONSTRAINT `FK_alquiler_detalle_transporte` FOREIGN KEY (`COD_TRANSPORTE`) REFERENCES `transporte` (`COD_TRANSPORTE`)
+);
+
+INSERT INTO `2doparcial`.`agencia` 
+(`COD_AGENCIA`, `NOMBRE`, `DIRECCION`, `CIUDAD`, `PROVINCIA`, `PAIS`) 
+
+VALUES
+('1', 'Olivieri', 'vergara 3223', 'hurlingham', 'buenos aires', 'argentina'),
+('2', 'checosline', 'jaurechet 782', 'hurlingham', 'buenos aires', 'argentina'),
+('3', 'faster', 'pedro diaz 1600', 'hurlingham', 'buenos aires', 'argentina'),
+('4', 'cha cha cha', 'brown 708', 'moron', 'buenos aires', 'argentina'),
+('5', 'LNG', 'paunero 1030', 'san miguel', 'buenos aires', 'argentina');
+
+INSERT INTO `2doparcial`.`empleado` 
+(`COD_EMPLEADO`, `NOMBRE`, `APELLIDO`, `DIRECCION`, `FECHA_NAC`, `EDAD`, `CIUDAD`, `PROVINCIA`) 
+
+VALUES
+('1', 'juan', 'perez', 'legolas 333', '1996-11-11', '23', 'hurlingham', 'buenos aires'),
+('2', 'evelin', 'iriarte', 'roma 893', '1999-10-11', '20', 'hurlingham', 'buenos aires'),
+('3', 'agustin', 'gomez', 'san martin 273', '1998-09-21', '22', 'caseros', 'mendoza'),
+('4', 'franco', 'maldonado', 'listz 1029', '2001-06-11', '19', 'guaymayen', 'mendoza'),
+('5', 'tony', 'stark', 'puerredon 2073', '1984-09-21', '34', 'san juan', 'san juan');
+
+INSERT INTO `2doparcial`.`categoria` 
+(`COD_CATEGORIA`, `CATEGORIA`) 
+
+VALUES 
+('1', 'Sedan 4 puertas'),
+('2', '4x4 4 puertas'),
+('3', '2 puertas con acoplado'),
+('4', 'moto'),
+('5', '5000 toneladas');
+
+INSERT INTO `2doparcial`.`cliente` 
+(`COD_CLIENTE`, `NOMBRE`, `APELLIDO`, `DIRECCION`, `FECHA_NAC`, `EDAD`, `SEXO`, `CIUDAD`, `PROVINCIA`, `PAIS`) 
+
+VALUES 
+('1', 'juan', 'foster', 'juramento 1239', '1986-11-11', '32', 'masculino', 'caba', 'buenos aires', 'argentina'),
+('2', 'giselle', 'becerra', 'bolivar 982', '1990-10-21', '30', 'femenino', 'hurlingham', 'buenos aires', 'argentina'),
+('3', 'paco', 'alcazer', 'calle 18', '1994-01-11', '32', 'masculino', 'mendoza', 'mendoza', 'argentina'),
+('4', 'andrea', 'mendoza', 'union 39', '1992-01-01', '27', 'masculino', 'san luis', 'san luis', 'argentina'),
+('5', 'barry', 'allen', 'central 1239', '1996-12-31', '25', 'masculino', 'caba', 'chubut', 'argentina');
+
+INSERT INTO `2doparcial`.`transporte` 
+(`COD_TRANSPORTE`, `COD_CATEGORIA`, `COD_AGENCIA`, `TRANSPORTE`, `MARCA`, `PU`) 
+
+VALUES 
+('1', '1', '4', 'auto', 'renault', '1600'),
+('2', '1', '5', 'auto', 'ford', '1700'),
+('3', '5', '5', 'camion', 'iveco', '2000'),
+('4', '2', '5', 'camioneta', 'toyota', '1900'),
+('5', '3', '1', 'camion', 'iveco', '2500'),
+('6', '4', '2', 'moto', 'motomel', '1000'),
+('7', '4', '3', 'moto', 'motomel', '1000');
+
+INSERT INTO `2doparcial`.`documento`
+(`COD_DOCUMENTO`, `COD_CLIENTE`, `TIPO`, `NUMERO`) 
+ 
+VALUES 
+('1', '1', 'dni', '33888976'),
+('2', '3', 'dni', '38000222'),
+('3', '2', 'dni', '32111906'),
+('4', '4', 'dni', '39218919'),
+('5', '5', 'dni', '40181916');
+
+INSERT INTO `2doparcial`.`compania` 
+(`COD_COMPANIA`, `NOMBRE`, `DIRECCION`, `CIUDAD`, `PROVINCIA`, `PAIS`) 
+
+VALUES 
+('1', 'HERTZ', 'corrientes 1814', 'caba', 'buenos aires', 'argentina'),
+('2', 'LINUXION', 'congres 1000', 'caba', 'buenos aires', 'argentina'),
+('3', 'OREGUN', 'llamas a mi 2006', 'cordoba', 'cordoba', 'argentina'),
+('4', 'PELISININA', 'principal 2012', 'rosario', 'santa fe', 'argentina'),
+('5', 'ROCKY', 'balboa 2006', 'mendoza', 'mendoza', 'argentina');
+
+INSERT INTO `2doparcial`.`alquiler` 
+(`COD_ALQUILER`, `COD_CLIENTE`, `COD_COMPANIA`, `COD_EMPLEADO`, `FECHA_ALQUILER`, `COMENTARIOS`)
+
+VALUES 
+('1', '5', '1', '5', '1990-11-11', 'hizo un alquiler'),
+('2', '1', '1', '2', '1993-10-21', 'hizo un alquiler'),
+('3', '2', '1', '5', '1987-01-31', 'hizo un alquiler'),
+('4', '1', '2', '1', '1992-03-29', 'hizo un alquiler'),
+('5', '3', '3', '4', '2000-09-11', 'hizo un alquiler'),
+('6', '4', '4', '4', '2018-12-21', 'hizo un alquiler'),
+('7', '1', '5', '3', '2000-11-01', 'hizo un alquiler'),
+('8', '1', '5', '3', '2020-06-06', 'hizo un alquiler'),
+('9', '1', '5', '3', '2001-05-03', 'hizo un alquiler');
+
+INSERT INTO `2doparcial`.`alquiler_detalle` 
+(`COD_DETALLE`, `COD_ALQUILER`, `COD_TRANSPORTE`, `CANTIDAD`) 
+
+VALUES 
+('1', '8', '3', '1'),
+('2', '8', '3', '1'),
+('3', '9', '5', '2'),
+('4', '8', '3', '5'),
+('5', '2', '2', '1'),
+('6', '1', '4', '5'),
+('7', '5', '1', '9');
+
+
+// consulta1
+SELECT alquiler.COD_ALQUILER, alquiler.COD_CLIENTE, alquiler.COD_COMPANIA, alquiler.COD_EMPLEADO, alquiler.FECHA_ALQUILER, alquiler.COMENTARIOS
+FROM alquiler, compania, alquiler_detalle, transporte, agencia
+WHERE alquiler.COD_COMPANIA = compania.COD_COMPANIA
+AND alquiler.COD_ALQUILER = alquiler_detalle.COD_ALQUILER
+AND alquiler_detalle.COD_TRANSPORTE = transporte.COD_TRANSPORTE
+AND transporte.COD_AGENCIA = agencia.COD_AGENCIA
+AND compania.NOMBRE = 'HERTZ'
+AND agencia.NOMBRE = 'LNG'
+AND alquiler.FECHA_ALQUILER BETWEEN '1999-01-01' AND '2013-12-31';
+
+//consulta2
+SELECT AVG(cliente.EDAD) AS promedioDeEdadDeClientes
+FROM cliente,empleado,alquiler, alquiler_detalle, transporte,categoria
+WHERE cliente.COD_CLIENTE = alquiler.COD_CLIENTE
+AND empleado.COD_EMPLEADO = alquiler.COD_EMPLEADO
+AND alquiler.COD_ALQUILER = alquiler_detalle.COD_ALQUILER
+AND alquiler_detalle.COD_TRANSPORTE = transporte.COD_TRANSPORTE
+AND transporte.COD_CATEGORIA = categoria.COD_CATEGORIA
+AND (empleado.PROVINCIA = 'mendoza' OR empleado.PROVINCIA = 'san juan')
+AND categoria.CATEGORIA = 'Sedan 4 puertas';
+
+// consulta3
+SELECT COUNT(cliente.COD_CLIENTE)
+FROM cliente, alquiler, alquiler_detalle,transporte,categoria,agencia
+WHERE cliente.COD_CLIENTE = alquiler.COD_CLIENTE
+AND alquiler.COD_ALQUILER = alquiler_detalle.COD_ALQUILER
+and alquiler_detalle.COD_TRANSPORTE = transporte.COD_TRANSPORTE
+AND transporte.COD_CATEGORIA = categoria.COD_CATEGORIA
+AND transporte.COD_AGENCIA = agencia.COD_AGENCIA
+AND agencia.NOMBRE = 'Olivieri'
+AND categoria.CATEGORIA = '5000 toneladas'
+AND transporte.TRANSPORTE = 'camion';
+
+// consulta4
+SELECT empleado.NOMBRE,empleado.APELLIDO,empleado.DIRECCION,empleado.FECHA_NAC,empleado.EDAD,empleado.CIUDAD,empleado.PROVINCIA
+FROM empleado,alquiler,cliente,documento
+WHERE empleado.COD_EMPLEADO = alquiler.COD_ALQUILER
+AND alquiler.COD_CLIENTE = cliente.COD_CLIENTE
+AND cliente.COD_CLIENTE = documento.COD_CLIENTE
+and documento.NUMERO > 28000000
+AND cliente.PROVINCIA = 'chubut';
